@@ -93,7 +93,8 @@ class ThemeTransform(object):
 
     def setupTransform(self, runtrace=False):
         request = self.request
-        DevelopmentMode = self.develop_theme()
+        # DevelopmentMode = self.develop_theme()
+        DevelopmentMode = False
 
         # Obtain settings. Do nothing if not found
         settings = self.getSettings()
@@ -111,6 +112,9 @@ class ThemeTransform(object):
 
         if not DevelopmentMode:
             transform = cache.transform
+
+        if self.request.form.get('diazo.recompile'):
+            transform = None
 
         if transform is None:
             rules = settings.rules

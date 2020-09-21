@@ -12,6 +12,7 @@ from lxml import etree
 
 from diazo.compiler import compile_theme
 from diazo.compiler import quote_param
+from diazo.subtransform import SubTransform
 
 from zope.component import getUtility
 from zope.component import queryUtility
@@ -604,10 +605,16 @@ def compileThemeTransform(rules, absolutePrefix=None, readNetwork=False, paramet
 
     if not compiledTheme:
         return None
+    themeDirectory = queryResourceDirectory(
+        THEME_RESOURCE_NAME, getCurrentTheme()).directory
+
+    extensions = {('dvext', 'sub'): SubTransform(
+        {'diazo_path': themeDirectory})}
 
     return etree.XSLT(compiledTheme,
+            extensions=extensions,
             access_control=accessControl,
-        )
+         )
 
 
 def prepareThemeParameters(context, request, parameterExpressions, cache=None):
